@@ -29,9 +29,9 @@ def collapseLinesP(lines):
   if not lines:
     return []
   collapsedLines = []
-  head, *tail = lines
+  head, *tail = lines # Unpack lines.
   currentBuild = [head]
-  idNow = head[9]
+  idNow = head[9] # 10th column is query ID.
   head, *tail = tail
   while tail:
     if head[9] != idNow:
@@ -48,15 +48,17 @@ def collapseLinesP(lines):
   return collapsedLines
 
 def alignmentScore(alignmentLine):
+  # Convert a line of blat output into a human-readable description.
   identities = int(alignmentLine[0])
   mismatches = int(alignmentLine[1])
-  ns = int(alignmentLine[3])
-  qGapCount = int(alignmentLine[4])
-  qGapBases = int(alignmentLine[5])
-  tGapCount = int(alignmentLine[6])
-  tGapBases = int(alignmentLine[7])
-  qLength = int(alignmentLine[10])
-  bools = [bool(x) for x in [(identities + mismatches + ns + qGapBases) != qLength,
+  ns         = int(alignmentLine[3])
+  qGapCount  = int(alignmentLine[4])
+  qGapBases  = int(alignmentLine[5])
+  tGapCount  = int(alignmentLine[6])
+  tGapBases  = int(alignmentLine[7])
+  qLength    = int(alignmentLine[10])
+  isNotFullLength = ((identities + mismatches + ns + qGapBases) != qLength)
+  bools = [bool(x) for x in [isNotFullLength,
                              tGapCount,
                              qGapCount,
                              ns,
@@ -87,4 +89,5 @@ with open(sys.argv[1], "r") as fh:
   for c in collapsed:
     id, alignments = c
     print(id,
-          mapScoreToMeaning(sorted([alignmentScore(a) for a in alignments], key=lambda x: int(x))[0]))
+          mapScoreToMeaning(sorted([alignmentScore(a) for a in alignments],
+                                   key=lambda x: int(x))[0]))

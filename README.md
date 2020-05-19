@@ -1,7 +1,7 @@
 # creamcar
 Assigns a class to alignments made with blat alignment tool.
 
-For example it converts the following lines of blat output:
+For example it converts the following lines of blat output for a given sequence:
 
 ```
 308     2       0       0       1       3       0       0       -       TraesCS1A02G428900.genomic      8758    7682    7995    Chr1A   598636984       586869002       586869312       2       6,304,  763,772,        586869002,586869008,
