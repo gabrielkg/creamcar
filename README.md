@@ -1,5 +1,5 @@
 # creamcar
-Assigns a class to alignments made with blat alignment tool.
+Assigns a class to alignments made with the blat alignment tool (http://www.kentinformatics.com/).
 
 For example it converts the following lines of blat output for a given sequence:
 
