@@ -16,28 +16,29 @@ For example it converts the following lines of blat output:
 To:
 
 ```
-TraesCS1A02G428900.genomic not full-length with mismatches
+TraesCS1A02G428900.genomic full-length with tGaps with qGaps with mismatches
 ```
 Where the alignment class reported is the "best". Applied to a full alignment we can summarise the cases:
 
 ```
 > python ~/dev/creamcar/creamcar.py IWGSC_v1.1_to_v2.0.genomic.notPerfectMatch.1A.psl|cut -d ' ' -f2-|sort|uniq -c|sort -k1,1nr
-    171 not full-length with tGaps with qGaps with mismatches
-    127 not full-length with tGaps with qGaps
+    203 full-length with tGaps with qGaps with mismatches
+    147 full-length with tGaps with qGaps
     123 full-length with Ns
     114 full-length with mismatches
-     39 not full-length with mismatches
-     28 not full-length with qGaps with mismatches
+     37 full-length with qGaps
+     36 full-length with qGaps with mismatches
      24 full-length with tGaps with mismatches
-     22 full-length with tGaps with qGaps with mismatches
-     20 full-length with qGaps with mismatches
-     19 not full-length with qGaps
-     17 full-length with qGaps
-     15 not full-length
-      9 not full-length with tGaps with mismatches
+     15 not full-length with tGaps with qGaps with mismatches
+     13 not full-length
+      7 not full-length with mismatches
       5 full-length with tGaps
       4 full-length with Ns with mismatches
-      2 full-length with tGaps with qGaps
-      2 not full-length with tGaps with qGaps with Ns with mismatches
+      4 full-length with tGaps with qGaps with Ns with mismatches
+      3 not full-length with qGaps with mismatches
+      2 full-length with tGaps with qGaps with Ns
+      2 not full-length with tGaps with qGaps
       1 full-length with qGaps with Ns with mismatches
+      1 not full-length with qGaps
+      1 not full-length with tGaps with mismatches
 ```
