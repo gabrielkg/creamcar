@@ -32,11 +32,12 @@ def alignmentScore(alignmentLine):
   tGapCount = int(alignmentLine[6])
   tGapBases = int(alignmentLine[7])
   qLength = int(alignmentLine[10])
-  binaryString = "".join([str(int(bool(x))) for x in [identities + mismatches + ns + qGapCount != qLength,
-                                   tGapCount,
-                                   qGapCount,
-                                   ns,
-                                   mismatches]])
+  bools = [bool(x) for x in [(identities + mismatches + ns + qGapCount) != qLength,
+                             tGapCount,
+                             qGapCount,
+                             ns,
+                             mismatches]]
+  binaryString = "".join([str(int(x)) for x in bools])
   return int(binaryString,2)
 
 with open(sys.argv[1], "r") as fh:
