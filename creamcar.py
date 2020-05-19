@@ -56,7 +56,7 @@ def alignmentScore(alignmentLine):
   tGapCount = int(alignmentLine[6])
   tGapBases = int(alignmentLine[7])
   qLength = int(alignmentLine[10])
-  bools = [bool(x) for x in [(identities + mismatches + ns + qGapCount) != qLength,
+  bools = [bool(x) for x in [(identities + mismatches + ns + qGapBases) != qLength,
                              tGapCount,
                              qGapCount,
                              ns,
