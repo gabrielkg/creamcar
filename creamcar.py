@@ -64,10 +64,27 @@ def alignmentScore(alignmentLine):
   binaryString = "".join([str(int(x)) for x in bools])
   return int(binaryString,2)
 
+def mapScoreToMeaning(score):
+  meaning = []
+  binary = [bool(int(x)) for x in list(str(bin(score))[2:].zfill(5))]
+  if binary[0]:
+    meaning += ["not full-length"]
+  else:
+    meaning += ["full-length"]
+  if binary[1]:
+    meaning += ["tGaps"]
+  if binary[2]:
+    meaning += ["qGaps"]
+  if binary[3]:
+    meaning += ["Ns"]
+  if binary[4]:
+    meaning += ["mismatches"]
+  return " with ".join(meaning)
+
 with open(sys.argv[1], "r") as fh:
   lines = [x.strip().split() for x in fh.readlines()]
   collapsed = collapseLinesP(lines[5:])
   for c in collapsed:
     id, alignments = c
-    for a in alignments:
-      print(id, alignmentScore(a))
+    print(id,
+          mapScoreToMeaning(sorted([alignmentScore(a) for a in alignments], key=lambda x: int(x))[0]))
