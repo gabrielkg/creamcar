@@ -2,25 +2,50 @@
 
 import sys
 
-def collapseLines(lines, currentBuild, collapsedLines):
+def collapseLinesF(lines, currentBuild, collapsedLines):
+  # Functional version.
+  # NOTE: Does not work since Python does not support tail recursion.
   if not lines: # End of the algorithm.
     return collapsedLines + [currentBuild]
   # We can now assume lines has an element.
   head, *tail = lines # Head will be something, tail may be empty.
   if not currentBuild: # Needed because can't unpack an empty list in python.
-    return collapseLines(tail,
+    return collapseLinesF(tail,
                          (head[9], [head]),
                          collapsedLines)
   else:
     id, hits = currentBuild # Can do this because we know it isn't empty.
     if head[9] != id:
-      return collapseLines(tail, 
+      return collapseLinesF(tail, 
                            (head[9], hits + [head]),
                            collapsedLines + [currentBuild])
     else:
-      return collapseLines(tail,
+      return collapseLinesF(tail,
                            (head[9], hits + [head]),
                            collapsedLines)
+
+def collapseLinesP(lines):
+  # Iterative version.
+  if not lines:
+    return []
+  collapsedLines = []
+  head, *tail = lines
+  currentBuild = [head]
+  idNow = head[9]
+  head, *tail = tail
+  while tail:
+    if head[9] != idNow:
+      collapsedLines += [(idNow, currentBuild)]
+      currentBuild = [head]
+      idNow = head[9]
+    else:
+      currentBuild += [head]
+    head, *tail = tail
+  if head[9] == idNow:
+    collapsedLines += [(idNow, currentBuild + [head])]
+  else:
+    collapsedLines += ([(idNow, currentBuild)] + [(head[9], [head])])
+  return collapsedLines
 
 def alignmentScore(alignmentLine):
   identities = int(alignmentLine[0])
@@ -41,7 +66,7 @@ def alignmentScore(alignmentLine):
 
 with open(sys.argv[1], "r") as fh:
   lines = [x.strip().split() for x in fh.readlines()]
-  collapsed = collapseLines(lines[5:25], [], [])
+  collapsed = collapseLinesP(lines[5:])
   for c in collapsed:
     id, alignments = c
     for a in alignments:
