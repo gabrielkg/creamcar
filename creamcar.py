@@ -1,6 +1,21 @@
 #!/usr/bin/env python
 
 import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--file", type=str,
+                    help="input file",
+                    required=True)
+parser.add_argument("--print-top-scoring-alignment",
+                    help="print top scoring alignment from blat",
+                    action="store_true",
+                    default=False)
+parser.add_argument("--suppress-top-scoring-category",
+                    help="do not print category of top scoring alignment from blat",
+                    action="store_true",
+                    default=False)
+args = parser.parse_args()
 
 def collapseLinesF(lines, currentBuild, collapsedLines):
   # Functional version.
@@ -58,11 +73,11 @@ def alignmentScore(alignmentLine):
   tGapBases  = int(alignmentLine[7])
   qLength    = int(alignmentLine[10])
   isNotFullLength = ((identities + mismatches + ns + qGapBases) != qLength)
-  bools = [bool(x) for x in [isNotFullLength,
+  bools = [bool(x) for x in [isNotFullLength, # Worst case.
                              tGapCount,
                              qGapCount,
                              ns,
-                             mismatches]]
+                             mismatches]]     # Best case.
   binaryString = "".join([str(int(x)) for x in bools])
   return int(binaryString,2)
 
@@ -83,11 +98,18 @@ def mapScoreToMeaning(score):
     meaning += ["mismatches"]
   return " with ".join(meaning)
 
-with open(sys.argv[1], "r") as fh:
-  lines = [x.strip().split() for x in fh.readlines()]
-  collapsed = collapseLinesP(lines[5:])
-  for c in collapsed:
-    id, alignments = c
-    print(id,
-          mapScoreToMeaning(sorted([alignmentScore(a) for a in alignments],
-                                   key=lambda x: int(x))[0]))
+if (not args.print_top_scoring_alignment) and args.suppress_top_scoring_category:
+  print("I need to print something!")
+else:
+  print(args.print_top_scoring_alignment, args.suppress_top_scoring_category)
+  with open(args.file, "r") as fh:
+    lines = [x.strip().split() for x in fh.readlines()]
+    collapsed = collapseLinesP(lines[5:])
+    for c in collapsed:
+      id, alignments = c
+      scores = [[alignmentScore(a),a] for a in alignments]
+      topScore = sorted(scores, key=lambda x: int(x[0]))[0]
+      if args.print_top_scoring_alignment:
+        print("\t".join(topScore[1]))
+      if not args.suppress_top_scoring_category:
+        print(id, mapScoreToMeaning(topScore[0]))
